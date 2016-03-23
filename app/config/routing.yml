@@ -1,0 +1,7 @@
+register:
+    path:     /register
+    defaults: { _controller: app.register_controller:indexAction }
+
+register_thanks:
+    path:     /register/thanks
+    defaults: { _controller: app.register_controller:thanksAction }

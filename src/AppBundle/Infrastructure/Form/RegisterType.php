@@ -1,0 +1,29 @@
+<?php
+namespace AppBundle\Infrastructure\Form;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
+class RegisterType extends AbstractType
+{
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+            ->add('firstname')
+            ->add('surname')
+        ;
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'data_class' => 'AppBundle\Core\Register\Register'
+        ));
+    }
+
+    public function getName() {
+        // TODO: Implement getName() method.
+        return 'register';
+    }
+}

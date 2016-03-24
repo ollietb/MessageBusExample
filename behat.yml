@@ -1,0 +1,28 @@
+default:
+  extensions:
+    Behat\Symfony2Extension: ~
+    Behat\MinkExtension:
+      sessions:
+        default:
+          symfony2: ~
+  suites:
+    core:
+      autoload:
+        '': %paths.base%/features/bootstrap
+      contexts:
+        - FeatureContext
+      type: symfony_bundle
+      bundle: 'AppBundle'
+      paths: [ %paths.base%/features ]
+      filters:
+        tags: "@core"
+    ui:
+      autoload:
+        '': %paths.base%/features/bootstrap
+      contexts:
+        - UIFeatureContext
+      type: symfony_bundle
+      bundle: 'AppBundle'
+      paths: [ %paths.base%/features ]
+      filters:
+        tags: "@ui"

@@ -1,0 +1,9 @@
+AppBundle\Domain\Register:
+    properties:
+        firstname:
+            - NotBlank: ~
+        surname:
+            - NotBlank: ~
+        email:
+            - NotBlank: ~
+            - Email: ~

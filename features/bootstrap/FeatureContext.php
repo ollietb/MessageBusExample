@@ -1,13 +1,11 @@
 <?php
 
-use AppBundle\Core\Register\Command\RegisterUserCommand;
-use AppBundle\Core\Register\Handler\RegisterUserCommandHandler;
-use AppBundle\Core\Register\Register;
-use AppBundle\Core\User\Query\UserQueryInterface;
+use AppBundle\Domain\Register\Command\RegisterUserCommand;
+use AppBundle\Domain\Register\Handler\RegisterUserCommandHandler;
+use AppBundle\Domain\Register\Register;
+use AppBundle\Domain\User\Query\UserQueryInterface;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
-use Behat\Gherkin\Node\PyStringNode;
-use Behat\Gherkin\Node\TableNode;
 use Behat\Symfony2Extension\Context\KernelAwareContext;
 use Behat\Symfony2Extension\Context\KernelDictionary;
 
@@ -30,6 +28,8 @@ class FeatureContext implements Context, SnippetAcceptingContext, KernelAwareCon
 
     private $name = [];
 
+    private $email;
+
     /**
      * @Given /^I am registering$/
      */
@@ -49,18 +49,20 @@ class FeatureContext implements Context, SnippetAcceptingContext, KernelAwareCon
 
         // throws exception if not found
         $user = $this->userQuery->findByName($this->name[0], $this->name[1]);
+        $user = $this->userQuery->findByEmail($this->email);
 
     }
 
     /**
-     * @When /^I register with the name "([^"]*)"$/
+     * @When /^I register with the name "([^"]*)" and email "([^"]*)"$/
      */
-    public function iRegisterWithTheName($arg1) {
+    public function iRegisterWithTheName($arg1, $arg2) {
         $name = explode(" ", $arg1);
 
         $this->name = $name;
+        $this->email = $arg2;
 
-        $register = new Register($name[0], $name[1]);
+        $register = new Register($name[0], $name[1], $arg2);
 
         $registration = new RegisterUserCommand($register);
 

@@ -22,15 +22,16 @@ class UIFeatureContext extends MinkContext implements Context, SnippetAcceptingC
     }
 
     /**
-     * @When /^I register with the name "([^"]*)"$/
+     * @When /^I register with the name "([^"]*)" and email "([^"]*)"$/
      */
-    public function iRegisterWithTheName($arg1) {
+    public function iRegisterWithTheName($arg1, $arg2) {
         $name = explode(" ", $arg1);
 
         $this->name = $name;
 
         $this->fillField('Firstname', $name[0]);
         $this->fillField('Surname', $name[1]);
+        $this->fillField('Email', $arg2);
 
         $this->pressButton('Register');
     }

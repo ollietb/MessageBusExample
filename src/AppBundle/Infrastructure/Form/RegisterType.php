@@ -12,18 +12,18 @@ class RegisterType extends AbstractType
         $builder
             ->add('firstname')
             ->add('surname')
+            ->add('email')
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Core\Register\Register'
+            'data_class' => 'AppBundle\Domain\Register\Register'
         ));
     }
 
     public function getName() {
-        // TODO: Implement getName() method.
         return 'register';
     }
 }

@@ -5,17 +5,17 @@ services:
         arguments: [@command_bus, @event_bus, @form.factory, @templating, @app.user_query]
 
     app.register_user_command_handler:
-        class: AppBundle\Core\Register\Handler\RegisterUserCommandHandler
+        class: AppBundle\Domain\Register\Handler\RegisterUserCommandHandler
         arguments: [@app.user_manager]
         tags:
-            - { name: command_handler, handles: AppBundle\Core\Register\Command\RegisterUserCommand }
+            - { name: command_handler, handles: AppBundle\Domain\Register\Command\RegisterUserCommand }
 
     app.user_manager:
-        class: AppBundle\Core\User\Manager\UserManager
+        class: AppBundle\Domain\User\Manager\UserManager
         arguments: [@app.user_repository]
 
     app.user_repository_file:
-        class: AppBundle\Core\User\Persistence\FileUserRepository
+        class: AppBundle\Domain\User\Persistence\FileUserRepository
 
     app.user_repository:
         alias: app.user_repository_file
@@ -32,13 +32,13 @@ services:
             - { name: event_bus_middleware, priority: 100 }
 
     app.user_registered_crm_event_subscriber:
-        class: AppBundle\Core\Register\EventSubscriber\CRMSubscriber
+        class: AppBundle\Domain\Register\EventSubscriber\CRMSubscriber
         arguments: [@command_bus]
         tags:
-            - { name: event_subscriber, subscribes_to: AppBundle\Core\Register\Command\RegisterUserCommand }
+            - { name: event_subscriber, subscribes_to: AppBundle\Domain\Register\Command\RegisterUserCommand }
 
     app.user_query_file:
-        class: AppBundle\Core\User\Query\FileUserQuery
+        class: AppBundle\Domain\User\Query\FileUserQuery
 
     app.user_query:
         alias: app.user_query_file

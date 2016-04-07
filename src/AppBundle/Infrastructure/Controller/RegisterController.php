@@ -8,10 +8,10 @@
 
 namespace AppBundle\Infrastructure\Controller;
 
-use AppBundle\Core\Register\Register;
-use AppBundle\Core\User\Query\UserQueryInterface;
+use AppBundle\Domain\Register\Register;
+use AppBundle\Domain\User\Query\UserQueryInterface;
 use AppBundle\Infrastructure\Form\RegisterType;
-use AppBundle\Core\Register\Command\RegisterUserCommand;
+use AppBundle\Domain\Register\Command\RegisterUserCommand;
 use SimpleBus\Message\Bus\Middleware\MessageBusSupportingMiddleware;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,7 +33,7 @@ class RegisterController
      */
     private $templating;
     /**
-     * @var \AppBundle\Core\User\Query\UserQueryInterface
+     * @var \AppBundle\Domain\User\Query\UserQueryInterface
      */
     private $userQuery;
     /**
@@ -70,39 +70,42 @@ class RegisterController
     {
 
         /**
-         * Get the raw data from the request
-         */
-        $data = $request->request->get('register');
-
-        /**
          * Create the register object
          */
         $register = new Register();
 
-        $register->setFirstname($data['firstname']);
+        $form = $this->formFactory->create(new RegisterType(), $register);
 
-        $register->setSurname($data['surname']);
+        $form->handleRequest($request);
 
-        /**
-         * This is the message
-         */
-        $command = new RegisterUserCommand($register);
+        if($form->isValid())
+        {
+            /**
+             * This is the message
+             */
+            $command = new RegisterUserCommand($register);
 
-        $this->messageBus->handle($command);
+            $this->messageBus->handle($command);
 
-        /**
-         * Fire an event
-         */
-        $this->eventBus->handle($command);
+            /**
+             * Fire an event
+             */
+            $this->eventBus->handle($command);
 
-        /**
-         * query
-         */
-        $user = $this->userQuery->findByName($register->getFirstname(), $register->getSurname());
+            /**
+             * query
+             */
+            $user = $this->userQuery->findByName($register->getFirstname(), $register->getSurname());
+
+            return $this->templating->renderResponse(
+              ':register:thanks.html.twig',
+              array('user' => $user)
+            );
+        }
 
         return $this->templating->renderResponse(
-          ':register:thanks.html.twig',
-          array('user' => $user)
+          ':register:index.html.twig',
+          array('form' => $form->createView())
         );
     }
 }

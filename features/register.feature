@@ -6,5 +6,5 @@ Feature: I can register
   @core @ui
   Scenario: I can register
     Given I am registering
-    When I register with the name "Ross Masters"
+    When I register with the name "Ross Masters" and email "ross.masters@eventstag.com"
     Then my account is created
